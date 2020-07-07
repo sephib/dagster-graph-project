@@ -1,0 +1,33 @@
+solids:
+  create_neo4j_db:
+    solids:
+      create_nodes:
+        config:
+          base_dir: ../data/interim/statsbomb
+#          base_dir: "hdfs:///tmp/dagster_graph/data/interim/statsbomb/"
+          label_types:
+          - Player
+          - Team
+      create_config:
+        config:
+          base_dir: ../data/interim/statsbomb/
+#          base_dir: "hdfs:///tmp/dagster_graph/data/interim/statsbomb/"
+          relationships:
+            - played_in
+            - played_together
+            - passed_to
+          bulkConfig:
+            neo4j_db_name: statsbomb_players
+            localFileName: statsbomb_players.conf.txt
+            mode: csv
+            delimiter: '|'
+            ignoreDuplicateNodes: true
+            ignoreMissingNodes: true
+            ignoreExtraColumns: true
+            maxMemory: 90%
+            reportFile: ~/import_config/neo4report.txt
+            highIO: true
+##     Use `copy_to_local` only if the data is stored in 'hdfs'.
+#      copy_to_local:
+#       config:
+#         local_dir: ~/projects/dagster/data/processed

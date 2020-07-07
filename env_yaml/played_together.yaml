@@ -1,0 +1,90 @@
+solids:
+  played_together:
+    outputs:
+    - df_edges:
+        csv:
+          path: ../data/interim/statsbomb/played_together_edges
+#          path: hdfs:///tmp/dagster_graph/data/interim/statsbomb/played_together_edges
+          header: False
+          sep: "|"
+          mode: overwrite
+    solids:
+      read_file:
+        config:
+          path: ../data/raw/statsbomb/player_team.csv
+#          path: hdfs:///tmp/dagster_graph/data/raw/statsbomb/player_team.csv
+          format: csv
+          options:
+            header: true
+            inferSchema: true
+            sep: '|'
+      use_cols:
+        config:
+          keep_cols:
+          - player_id
+          - player_name
+          - country
+          - team_id
+          - team_name
+          - country_name
+          - competition
+          - competition_stage
+          - competition_name 
+          - competition_gender
+          - season
+          - season_name
+          - match_id
+          - match_date
+          - match_status
+          - match_week
+      rename_cols1:
+        config:
+          renamed_cols:
+            player_name: NodeName
+            player_id: NodeID
+      dropna:
+        config:
+          how: any
+          subset:
+          - player_id
+          - team_id
+          - match_id
+      add_col_label1:
+        config:
+          col_new: Label
+          value: Player
+      concat:
+        config:
+          col_new: EdgeID
+          sep: _
+          subset:
+          - team_id
+          - match_id
+      create_edges_from_edgeID:
+        config:
+          col_edges: EdgeID
+          col_nodeid: NodeID
+          node_att:
+          - NodeName
+          - Label
+          - country
+      rename_cols_neo4j:
+        config:
+          renamed_cols:
+            NodeID1: NodeID1:START_ID
+            NodeID2: NodeID2:END_ID
+      edges_agg:
+        config:
+          cols_gb:
+          - NodeID1
+          - NodeID2
+          min_edges: 1
+          node_att:
+          - NodeName
+          - Label
+          weight_distinct_col: match_id
+      save_header_edges:
+        config:
+          path: ../data/interim/statsbomb/played_together_header.csv
+#          path: hdfs:///tmp/dagster_graph/data/interim/statsbomb/played_together_header.csv
+          sep: '|'

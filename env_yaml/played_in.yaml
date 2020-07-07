@@ -1,0 +1,84 @@
+solids:
+  played_in:
+    outputs:
+    - df_edges:
+        csv:
+          path: ../data/interim/statsbomb/played_in_edges
+#          path: hdfs:///tmp/dagster_graph/data/interim/statsbomb/played_in_edges
+          header: False
+          sep: "|"
+          mode: overwrite
+    solids:
+      read_file:
+        config:
+          path: ../data/raw/statsbomb/player_team.csv
+#          path: hdfs:///tmp/dagster_graph/data/raw/statsbomb/player_team.csv
+          format: csv
+          options:
+            header: true
+            inferSchema: true
+            sep: '|'
+      use_cols:
+        config:
+          keep_cols:
+          - player_id
+          - player_name          
+          - team_id
+          - team_name
+      rename_cols1:
+        config:
+          renamed_cols:
+            player_name: NodeName
+            player_id: NodeID
+      dropna:
+        config:
+          how: any
+          subset:
+          - NodeID
+          - team_id
+      add_col_label1:
+        config:
+          col_new: Label
+          value: Player
+      concat:
+        config:
+          col_new: EdgeID
+          sep: _
+          subset:
+          - team_id
+          - NodeID
+      drop_duplicates:
+        config:          
+          subset: []
+      rename_cols2:
+        config:
+          renamed_cols:
+            team_id: NodeID1
+            team_name: NodeName1
+            Label: Label2
+            NodeName: NodeName2
+            NodeID: NodeID2
+      add_col_label2:
+        config:
+          col_new: Label1
+          value: Team
+      edges_agg:
+        config:
+          cols_gb:
+          - NodeID1
+          - NodeID2
+          min_edges: 1
+          node_att:
+          - NodeName
+          - Label
+          weight_distinct_col: EdgeID
+      rename_cols_neo4j:
+        config:
+          renamed_cols:
+            NodeID1: NodeID1:START_ID
+            NodeID2: NodeID2:END_ID
+      save_header_edges:
+        config:
+          path: ../data/interim/statsbomb/played_in_header.csv
+#          path: hdfs:///tmp/dagster_graph/data/interim/statsbomb/played_in_header.csv
+          sep: '|'

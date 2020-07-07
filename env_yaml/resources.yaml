@@ -1,0 +1,7 @@
+resources:
+  spark:
+    config:
+      spark_conf:
+        spark:
+           master: "local"
+#          master: "yarn"

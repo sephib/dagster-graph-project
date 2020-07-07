@@ -1,0 +1,71 @@
+solids:
+  passed_to:
+    outputs: 
+    - df_edges: 
+        csv:
+          path: ../data/interim/statsbomb/player_pass_edges
+#          path: hdfs:///tmp/dagster_graph/data/interim/statsbomb/player_pass_edges
+          header: False
+          sep: "|"
+          mode: overwrite
+    solids:
+      read_file:
+        config:
+          path: ../data/raw/statsbomb/player_pass_sample.parq
+#          path: hdfs:///tmp/dagster_graph/data/raw/statsbomb/player_pass_sample.parq
+          format: parquet
+      dropna: 
+        config:
+          how: any
+          subset:
+          - pass_recipient_id
+      drop_cols:
+        config:
+          subset:
+          - timestamp
+          - pass_length
+          - possession_team
+          - type
+          - __index_level_0__
+          - id
+          - minute
+          - related_events
+      rename_cols:
+        config:
+          renamed_cols:
+            player: NodeName1            
+            playerID: NodeID1
+            pass_recipient: NodeName2
+            pass_recipient_id: NodeID2
+      astype:
+        config:
+          type: int
+          subset: ['NodeID1', 'NodeID2']
+      add_col_label1:
+        config:
+          col_new: Label1
+          value: Player
+      add_col_label2:
+        config:
+          col_new: Label2
+          value: Player     
+      rename_cols_neo4j:
+        config:
+          renamed_cols:
+            NodeID1: NodeID1:START_ID
+            NodeID2: NodeID2:END_ID
+      edges_agg: 
+        config:
+          cols_gb:
+          - NodeID1
+          - NodeID2
+          min_edges: 1
+          node_att:
+          - Label
+          - NodeName
+          weight_distinct_col: match_id
+      save_header_edges:
+        config:
+          path: ../data/interim/statsbomb/player_pass_header.csv
+#          path: hdfs:///tmp/dagster_graph/data/interim/statsbomb/player_pass_header.csv
+          sep: '|'
