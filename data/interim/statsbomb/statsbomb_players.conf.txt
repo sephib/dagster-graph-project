@@ -1,0 +1,14 @@
+--database=statsbomb_players
+--mode=csv
+--delimiter=|
+--ignore-duplicate-nodes=True
+--ignore-missing-nodes=True
+--ignore-extra-columns=True
+--max-memory=90%
+--report-file=~\import_config\statsbomb_players_neo4report.txt
+--high-io=True
+--nodes:Player "nodes/Player_header.csv,nodes/Player/part.*.csv"
+--nodes:Team "nodes/Team_header.csv,nodes/Team/part.*.csv"
+--relationships:PLAYED_IN "played_in_header.csv,played_in_edges/part.*.csv"
+--relationships:PLAYED_TOGETHER "played_together_header.csv,played_together_edges/part.*.csv"
+--relationships:PASSED_TO "passed_to_header.csv,passed_to_edges/part.*.csv"
