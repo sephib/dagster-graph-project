@@ -3,15 +3,15 @@ solids:
     outputs: 
     - df_edges: 
         csv:
-          path: ../data/interim/statsbomb/player_pass_edges
-#          path: hdfs:///tmp/dagster_graph/data/interim/statsbomb/player_pass_edges
+          path: ../data/interim/statsbomb/passed_to_edges
+#          path: hdfs:///tmp/dagster_graph/data/interim/statsbomb/passed_to_edges
           header: False
           sep: "|"
           mode: overwrite
     solids:
       read_file:
         config:
-          path: ../data/raw/statsbomb/player_pass_sample.parq
+          path: ../data/raw/statsbomb/player_pass.parq
 #          path: hdfs:///tmp/dagster_graph/data/raw/statsbomb/player_pass_sample.parq
           format: parquet
       dropna: 
