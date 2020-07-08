@@ -382,6 +382,11 @@ def statsbomb_pipeline():
 In our pipeline, we have two `composite_solid`s that output 2 `Dataframe` objects.  
 Our final `create_neo4j_db composite_solid` is dependent on the output of the prior 2 `composite_solid`s and executes a solid to generate the node files, in addition to execute a `neo4j-admin.bat` script to bulk import that data into the database.  
  
+
+### Dagit  
+The DAG output of the run can be viewed with [Dagit](https://docs.dagster.io/tutorial/execute#executing-our-first-pipeline) (`dagster's` UI).  This allows to review the various steps in the pipeline and get additional information on the various solids tasks.  
+Bellow is an image from one of our pipelines  
+<img src="docs/images/dagit_run_output.png" alt="dagit run screenshot" width="650" >
  
 
 ## Into Neo4j
