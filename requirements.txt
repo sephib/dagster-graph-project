@@ -1,0 +1,7 @@
+python>=3.7
+dagster>=0.8.4
+dagster_pyspark>=0.8.4
+dagster_shell>=0.8.4
+pyspark
+pyarrow
+findspark
