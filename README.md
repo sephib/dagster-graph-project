@@ -394,7 +394,10 @@ Bellow is an image from one of our pipelines
 The results of the Pipeline can be imported into `neo4j` .  
 In order to import _bigData_ in an optimal manner we will use the [batch import](https://neo4j.com/docs/operations-manual/4.1/tools/import/) admin tool.  This allows for loading tens of millions of nodes and billions of relationships  in the matter of hours.  
 
-Here is some data for Liverpool's striker [Mohamed Salah](https://en.wikipedia.org/wiki/Mohamed_Salah):  
+The result of the _import_ command is a `Neo4j` database that can be loaded from [data/processed/](data/processed/stats_player.db.zip).  To load the database you can use [neo4j-admin load](https://neo4j.com/docs/operations-manual/3.5/tools/dump-load/) command.  
+Note that the neo4j database is in version 3.X
+
+Here is a screenshot for Liverpool's striker [Mohamed Salah](https://en.wikipedia.org/wiki/Mohamed_Salah):  
 
 <img src="docs/images/graphMohamed_Salah.png" alt="graph Mohamed Salah" width="650" >
 
@@ -407,7 +410,7 @@ Once we managed to *_grok_* our understanding of `dagster` and wrap our pyspark 
     3. Since we had various checkpoints where we needed to dump our datasets, we found that when our `spark` performed unexpectedly, braking up the pipeline by reading back the output file (instead of passing on the dataframe object) allowed spark to manage its resources in an optimal manner.
     2. Since our environment is on a CDH, the iteration of building a pipeline was enhanced when combining a `jupyter notebook` that would implement each step in the `composite solid`     
 2. Dagster:  
-    1. Remember to set [DAGSTER_HOME](https://docs.dagster.io/overview/instances/dagster-instance) once you are becoming serious
+    1. Remember to set [DAGSTER_HOME](https://docs.dagster.io/overview/instances/dagster-instance) once the pipeline is not a playground (in order to log the runs etc, otherwise each run is ephemeral) 
     
 
 
@@ -420,9 +423,3 @@ Dagster has several additional components that can upgrade the pipeline in a sig
 In this post we describe our workflow for generating a graph from separate data sources.  
 As our project matured, we needed to stabilize our workflow, thus migrating our ad-hoc script scaffolds into `Dagster`s framework.  In this process we were able to improve the quality of our pipeline and enable new data sources to quickly be integrated in our product in a frectioness manner.  
 We hope that this post will inspire you to upgrade your workflow.  
-
-
-
-```python
-
-```
